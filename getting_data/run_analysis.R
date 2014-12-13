@@ -50,6 +50,14 @@ wanted_features <- read.table('features.txt', header = F)
 names(wanted_features) <- c('id', 'name')
 
 ##2. Extracts only the measurements on the mean and standard deviation for each measurement. 
-wanted_measurements <- x_measurements[, unlist(as.character(wanted_features$name))]
+wanted_measurements <- x_measurements[, c(as.character(wanted_features$name))]
+wanted_measurements$labels <- y_labels
+wanted_measurements$subjects <- subjects
+names(wanted_measurements) <- c(as.character(wanted_features$name), "labels", "subjects")
+head(wanted_measurements) 
 
+
+
+#5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+write.table(x = wanted_measurements, './tiny_data.txt', row.names = FALSE,append = F, sep = ' ', col.names = T)
 

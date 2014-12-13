@@ -17,6 +17,5 @@ should_merge_two_files_test <- function(){
         checkEquals(length(file1) + length(file2), length(merged_file))
 }
 
-should_merge_two_files_test()
 
 
