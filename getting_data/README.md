@@ -46,9 +46,9 @@ comments in the script are:
 
 1. the first step is to read files where labels are stored
 
-2. then test and train files are merged:
-    \- subjects
-    \- X
+2. then test and train files are merged: 
+    \- for subjects files
+    \- for X files
 
 3. set columns names to X which are the features read previously
 
