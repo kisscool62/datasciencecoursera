@@ -37,7 +37,7 @@ The directory includes the following files:
 ==================================================================
 ##### run_analysis.R
 ==================================================================
-description of the script
+*description of the script*
 
 1. the first step is to read files where labels are stored
 
@@ -56,7 +56,7 @@ description of the script
 ==================================================================
 ##### tidy_data_set.txt
 ==================================================================
-table, each column is separated by a ' '
+*table, each column is separated by a ' '*
 
 - subjects: volonteer's id. range [1, 30]
 - activity: belongs to [WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING]
@@ -68,7 +68,7 @@ table, each column is separated by a ' '
 ==================================================================
 ##### tidy_data_set.csv
 ==================================================================
-table, each column is separated by a ','
+*table, each column is separated by a ','*
 
 - subjects: volonteer's id. range [1, 30]
 - activity: belongs to [WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING]
