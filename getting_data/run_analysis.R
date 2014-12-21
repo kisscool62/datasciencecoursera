@@ -88,5 +88,5 @@ tidy_data_set <- spread(df, agregate, value)
 tidy_data_set <- arrange(tidy_data_set, subjects, activity, feature, axis)
 
 
-#write data
+
 write.table(x = tidy_data_set, file = "tidy_data_set.txt", row.names = FALSE)
