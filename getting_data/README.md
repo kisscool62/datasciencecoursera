@@ -2,9 +2,9 @@
 ## Human Activity Recognition Using Smartphones Dataset
 Version 1.0
 ==================================================================
-Pascal AUREGAN
-Coursera
-Getting and Cleaning Data
+# Pascal AUREGAN
+# Coursera
+# Getting and Cleaning Data
 ==================================================================
 * This data set is created from
 
