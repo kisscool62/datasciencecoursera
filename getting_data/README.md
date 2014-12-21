@@ -1,19 +1,19 @@
 ==================================================================
-Human Activity Recognition Using Smartphones Dataset
+## Human Activity Recognition Using Smartphones Dataset
 Version 1.0
 ==================================================================
 Pascal AUREGAN
 Coursera
 Getting and Cleaning Data
 ==================================================================
-This data set is done from
+* This data set is created from
 
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
 
-Original data and description can be found at
+* Original data and description can be found at
 http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones 
 
-The goal of the script is to extract means and standard deviations from the original data. mean and standard deviation should be the value for each subject, each activity, each feature, each axis.
+* The goal of the script is to extract means and standard deviations from the original data. Mean and standard deviation should be the value for each subject, each activity, each feature, each axis.
 
 ==================================================================
 
@@ -60,7 +60,6 @@ table, each column is separated by a ' '
 - feature: belongs to ["fBodyAcc", "fBodyAccJerk", "fBodyGyro", "tBodyAcc", "tBodyAccJerk", "tBodyGyro", "tBodyGyroJerk", "tGravityAcc"]
 - axis: axis of the feature recorded in 3 dimensions, belongs to ["X", "Y", "Z"]
 - mean(): mean of values of recorded features for each axis, on ieach feature for each activity, for each subject
-- Z"]
 - std(): mean standard deviation of values of recorded features for each axis, on ieach feature for each activity, for each subject
 
 ==================================================================
@@ -73,6 +72,5 @@ table, each column is separated by a ','
 - feature: belongs to ["fBodyAcc", "fBodyAccJerk", "fBodyGyro", "tBodyAcc", "tBodyAccJerk", "tBodyGyro", "tBodyGyroJerk", "tGravityAcc"]
 - axis: axis of the feature recorded in 3 dimensions, belongs to ["X", "Y", "Z"]
 - mean(): mean of values of recorded features for each axis, on ieach feature for each activity, for each subject
-- Z"]
 - std(): mean standard deviation of values of recorded features for each axis, on ieach feature for each activity, for each subject
 
