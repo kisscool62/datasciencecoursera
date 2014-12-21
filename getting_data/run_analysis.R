@@ -2,12 +2,12 @@
 library(dplyr)
 library(tidyr)
 
-###
+### reading linked files like labels, feature names, activity labels
 features <- read.table("UCI HAR Dataset/features.txt")
 activity_labels <- read.table("UCI HAR Dataset/activity_labels.txt")
 names(activity_labels) <- c("id_activity", "activity_name")
 
-## names
+## feature names
 feature_names <- as.character(features[, 2])
 
 ### 1) merging test and train
@@ -85,6 +85,6 @@ summary <- summarize(grp, value = mean(value))
 df <- data.frame(summary)
 tidy_data_set <- spread(df, agregate, value)
 
-tidy_data_set <- arrange(tidy_data_set, subjects, activity, feature, axis)
+tidy_data_set <- arrange(tidy_data_set, subjects, desc(activity), feature, axis)
 
 
