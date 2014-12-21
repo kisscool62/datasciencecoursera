@@ -1,63 +1,92 @@
-working_directory <- 'E:\\workspace\\R\\coursera\\getting_data_project\\datasciencecoursera\\getting_data'
-setwd(working_directory)
+
+library(dplyr)
+library(tidyr)
+
+###
+features <- read.table("UCI HAR Dataset/features.txt")
+activity_labels <- read.table("UCI HAR Dataset/activity_labels.txt")
+names(activity_labels) <- c("id_activity", "activity_name")
+
+## names
+feature_names <- as.character(features[, 2])
+
+### 1) merging test and train
+## merging subject
+subject_test <- read.table("UCI HAR Dataset/test/subject_test.txt")
+subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt")
+
+# add train rows to test rows
+subjects <- rbind(subject_test, subject_train)
+
+#setting names to subjects
+names(subjects) <- "subjects"
+
+## merging X
+X_test <- read.table("UCI HAR Dataset/test/X_test.txt")
+X_train <- read.table("UCI HAR Dataset/train/X_train.txt")
+
+# add train rows to test rows
+X <- rbind(X_test, X_train)
+
+#setting names to X
+names(X) <- feature_names
+
+## merging y
+y_test <- read.table("UCI HAR Dataset/test/y_test.txt")
+y_train <- read.table("UCI HAR Dataset/train/y_train.txt")
+
+# add train rows to test rows
+y <- rbind(y_test, y_train)
+
+# setting namee to activity
+names(y) <- "activity"
+
+### 2) Extracts only the measurements on the mean and standard deviation for each measurement. 
+## getting mean and std deviation columns
+mean_columns <- as.character(features[grep(".*-mean\\(\\).*-[X|Y|Z]", features[,2]), 2])
+std_columns <- as.character(features[grep(".*-std.*-[X|Y|Z]", features[,2]), 2])
+mean_x <- X[, mean_columns]
+std_x <- X[, std_columns]
+
+## building a new X data set with only wanted columns
+new_X <- cbind(mean_x, std_x)
+new_X <- cbind(y, new_X)
+new_X <- cbind(subjects, new_X)
+# now new_X is a data frame with a column of subjects, activity columns, mean measures, std measures
+
+#now put variables in values
+# transform (for instance) fBodyAcc-mean()-Z coluns in values put in a column named label, and original value is put in column value
+other <- gather(new_X, label, value, 3:50)
+
+# separates fBodyAcc-mean()-Z into fBodyAcc, mean(), Z columns. The same for std()
+tidy <- separate(other, col = "label", into = c("feature", "agregate", "axial"), sep="-")
+
+unique(tidy$axial)
+
+### 3. Uses descriptive activity names to name the activities in the data set
+activity_labeled <- as.character(sapply(X=as.character(tidy$activity), FUN= function(ac){activity_labels[activity_labels$id_activity == ac,2]}))
+
+tidy_labeled <- cbind(tidy, activity_labeled)
+
+### 4. Appropriately labels the data set with descriptive variable names
+#renaming some variables, removing non labeled columns
+result <- select(tidy_labeled, subjects, activity = activity_labeled, feature, agregate, axis = axial, value)
+
+### 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject
+#mutate subjects into numeric to avoid sorting issues
+tidy_data_set <- mutate(result, subjects = as.numeric(subjects))
+tidy_data_set <- mutate(tidy_data_set, value = as.numeric(value))
+tidy_data_set <- mutate(tidy_data_set, axis = as.character(axis))
+tidy_data_set <- mutate(tidy_data_set, feature = as.character(feature))
+tidy_data_set <- mutate(tidy_data_set, agregate = as.character(agregate))
+
+grp <- group_by(tidy_data_set, subjects, activity, feature, agregate, axis)
+summary <- summarize(grp, value = mean(value))
+df <- data.frame(summary)
+tidy_data_set <- spread(df, agregate, value)
+
+tidy_data_set <- arrange(tidy_data_set, subjects, activity, feature, axis)
 
 
-source('merge_train_and_test.R')
-root_directory <- "UCI HAR Dataset"
-##1. Merges the training and the test sets to create one data set.
-##I prefered merging train and test files data sets into new files than merging data sets in memory because it's very long
-## merge train and test files into new files
-## uncomment the line below to do the job
-## comment this line if you do not want to the job each time you want to do the analysis (it's to long)
-#this function is in the 'merge_train_and_test.R file in the same repository
-
-#merge_train_and_test(root_directory)
-
-## getting variable names in features.txt
-features <- read.table(paste(root_directory, paste('/', 'features.txt', sep='/'), sep='/'), header = F)
-names(features) <- c('id', 'name')
-
-
-## getting the data set to analyse
-data_set <- 'test'
-
-path <- paste(root_directory, paste('/', data_set, sep = ""), sep = "")
-
-path
-
-list.files(full.names = TRUE, path = path)
-
-x_measurement_file_path <- paste(path, paste('/', paste(paste('X_', data_set, sep=''), '.txt', sep=''), sep=''), sep='')
-y_labels_file_path <- paste(path, paste('/', paste(paste('y_', data_set, sep=''), '.txt', sep=''), sep=''), sep='')
-subjects_file_path <- paste(path, paste('/', paste(paste('subject_', data_set, sep=''), '.txt', sep=''), sep=''), sep='')
-
-file.info(x_measurement_file_path)
-file.info(y_labels_file_path)
-
-## reading tables
-x_measurements <- read.table(x_measurement_file_path, header = F)
-y_labels <- read.table(y_labels_file_path, header = F)
-subjects <- read.table(subjects_file_path, header = F)
-
-##3. Uses descriptive activity names to name the activities in the data set
-##setting column names and adding labels and subject ids
-x_measurements$labels <- y_labels
-x_measurements$subjects <- subjects
-##4. Appropriately labels the data set with descriptive variable names. 
-names(x_measurements) <- c(as.character(features$name), 'labels', 'subjects')
-
-wanted_features <- read.table('features.txt', header = F)
-names(wanted_features) <- c('id', 'name')
-
-##2. Extracts only the measurements on the mean and standard deviation for each measurement. 
-wanted_measurements <- x_measurements[, c(as.character(wanted_features$name))]
-wanted_measurements$labels <- y_labels
-wanted_measurements$subjects <- subjects
-names(wanted_measurements) <- c(as.character(wanted_features$name), "labels", "subjects")
-head(wanted_measurements) 
-
-
-
-#5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-write.table(x = wanted_measurements, './tiny_data.txt', row.names = FALSE,append = F, sep = ' ', col.names = T)
-
+#write data
+write.table(x = tidy_data_set, file = "tidy_data_set.txt", row.names = FALSE)
