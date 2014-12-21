@@ -2,6 +2,7 @@
 library(dplyr)
 library(tidyr)
 
+## 1. the first step is to read files where labels are stored
 ### reading linked files like labels, feature names, activity labels
 features <- read.table("UCI HAR Dataset/features.txt")
 activity_labels <- read.table("UCI HAR Dataset/activity_labels.txt")
@@ -10,6 +11,7 @@ names(activity_labels) <- c("id_activity", "activity_name")
 ## feature names
 feature_names <- as.character(features[, 2])
 
+## 2. then test and train files are merged
 ### 1) merging test and train
 ## merging subject
 subject_test <- read.table("UCI HAR Dataset/test/subject_test.txt")
@@ -18,18 +20,12 @@ subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt")
 # add train rows to test rows
 subjects <- rbind(subject_test, subject_train)
 
-#setting names to subjects
-names(subjects) <- "subjects"
-
 ## merging X
 X_test <- read.table("UCI HAR Dataset/test/X_test.txt")
 X_train <- read.table("UCI HAR Dataset/train/X_train.txt")
 
 # add train rows to test rows
 X <- rbind(X_test, X_train)
-
-#setting names to X
-names(X) <- feature_names
 
 ## merging y
 y_test <- read.table("UCI HAR Dataset/test/y_test.txt")
@@ -38,9 +34,19 @@ y_train <- read.table("UCI HAR Dataset/train/y_train.txt")
 # add train rows to test rows
 y <- rbind(y_test, y_train)
 
+
+## 3. set columns names to X which are the features read previously
+
+#setting names to subjects
+names(subjects) <- "subjects"
+
+#setting names to X
+names(X) <- feature_names
+
 # setting namee to activity
 names(y) <- "activity"
 
+## 4. extract only mean and standard deviation columns
 ### 2) Extracts only the measurements on the mean and standard deviation for each measurement. 
 ## getting mean and std deviation columns
 mean_columns <- as.character(features[grep(".*-mean\\(\\).*-[X|Y|Z]", features[,2]), 2])
@@ -54,6 +60,7 @@ new_X <- cbind(y, new_X)
 new_X <- cbind(subjects, new_X)
 # now new_X is a data frame with a column of subjects, activity columns, mean measures, std measures
 
+## 5. Then the goal is to extract information from those column names. In Each column names is stored 3 informations: feature, axis, agregate (mean or standard deviation)
 #now put variables in values
 # transform (for instance) fBodyAcc-mean()-Z coluns in values put in a column named label, and original value is put in column value
 other <- gather(new_X, label, value, 3:50)
@@ -63,16 +70,19 @@ tidy <- separate(other, col = "label", into = c("feature", "agregate", "axial"),
 
 unique(tidy$axial)
 
-### 3. Uses descriptive activity names to name the activities in the data set
+
+## 6. At this step we just have to rename some variables and arrange them. I sorted activity names in desc order to conform the order given in the original description.
+
+### 3) Uses descriptive activity names to name the activities in the data set
 activity_labeled <- as.character(sapply(X=as.character(tidy$activity), FUN= function(ac){activity_labels[activity_labels$id_activity == ac,2]}))
 
 tidy_labeled <- cbind(tidy, activity_labeled)
 
-### 4. Appropriately labels the data set with descriptive variable names
+### 4) Appropriately labels the data set with descriptive variable names
 #renaming some variables, removing non labeled columns
 result <- select(tidy_labeled, subjects, activity = activity_labeled, feature, agregate, axis = axial, value)
 
-### 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject
+### 5) From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject
 #mutate subjects into numeric to avoid sorting issues
 tidy_data_set <- mutate(result, subjects = as.numeric(subjects))
 tidy_data_set <- mutate(tidy_data_set, value = as.numeric(value))

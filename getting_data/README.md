@@ -40,6 +40,10 @@ The directory includes the following files:
 ==================================================================
 *description of the script*
 
+comments in the script are: 
+- \#\# 1. is a comment describing the steps writen bellow
+- \#\# 1) is a comment describing the steps of project expectations
+
 1. the first step is to read files where labels are stored
 
 2. then test and train files are merged:
