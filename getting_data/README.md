@@ -32,9 +32,10 @@ The directory includes the following files:
 
 ==================================================================
 
-### CODEBOOK
+### What the script does
 
 ==================================================================
+
 ##### run_analysis.R
 ==================================================================
 *description of the script*
@@ -54,6 +55,10 @@ The directory includes the following files:
 6. At this step we just have to rename some variables and arrange them. I sorted activity names in desc order to conform the order given in the original description.
 
 ==================================================================
+
+### CODEBOOK
+
+==================================================================
 ##### tidy_data_set.txt
 ==================================================================
 *table, each column is separated by a ' '*
@@ -62,8 +67,8 @@ The directory includes the following files:
 - activity: belongs to [WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING]
 - feature: belongs to ["fBodyAcc", "fBodyAccJerk", "fBodyGyro", "tBodyAcc", "tBodyAccJerk", "tBodyGyro", "tBodyGyroJerk", "tGravityAcc"]
 - axis: axis of the feature recorded in 3 dimensions, belongs to ["X", "Y", "Z"]
-- mean(): mean of values of recorded features for each axis, on ieach feature for each activity, for each subject
-- std(): mean standard deviation of values of recorded features for each axis, on ieach feature for each activity, for each subject
+- mean(): mean of values of recorded features for each axis, on ieach feature for each activity, for each subject. Bounded within [-1, 1] 
+- std(): mean standard deviation of values of recorded features for each axis, on ieach feature for each activity, for each subject. Bounded within [-1, 1]
 
 ==================================================================
 ##### tidy_data_set.csv
